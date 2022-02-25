@@ -31,8 +31,8 @@ var key
 var customerMonths = []
 for (key in customerMonthsHash) {
     customerMonths.push({
-        month: key.split("-")[0],
-        customer: key.split("-")[1],
+        month: key.split("-")[1],
+        customer: key.split("-")[0],
         amount: customerMonthsHash[key]
     })
 }
@@ -45,11 +45,21 @@ for (key in customerTotalHash) {
     })
 }
 
-const CustomerMonthsComponent = customerMonths.map((customerMonth, index) => {
+const customerMonthsSorted = customerMonths.sort((a, b) => {
+    if (a.month < b.month) {
+        return -1
+    }
+    if (a.month > b.month) {
+        return 1
+    }
+    return 0;
+})
+
+const CustomerMonthsComponent = customerMonthsSorted.map((customerMonth, index) => {
   return (
     <tr key={index}>
-      <td>{customerMonth.customer}</td>
       <td>{customerMonth.month}</td>
+      <td>{customerMonth.customer}</td>
       <td>{customerMonth.amount}</td>
     </tr>
   )
@@ -66,36 +76,36 @@ const CustomerTotalsComponent = customerTotals.map((customerTotal, index) => {
 
 const MonthlySummary = () => {
   return ( 
-    <>
-      <h3>Monthly Summary </h3>
       <Container>
-    
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Month</th>
-            <th>Customer</th>
-            <th>Monthly Points</th>
-          </tr>
-        </thead>
-        <tbody>
-          {CustomerMonthsComponent}
-        </tbody>
-      </Table>
+        <h2>Charter Rewards Program</h2>
+        <h3>Monthly Customer Summary </h3>
+      
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Customer</th>
+              <th>Monthly Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {CustomerMonthsComponent}
+          </tbody>
+        </Table>
 
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Customer</th>
-            <th>Total Points</th>
-          </tr>
-        </thead>
-        <tbody>
-          {CustomerTotalsComponent}
-        </tbody>
-      </Table>
+        <h3>Customer Summary </h3>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Total Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {CustomerTotalsComponent}
+          </tbody>
+        </Table>
     </Container>
-    </>
    );
 }
  

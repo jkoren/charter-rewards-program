@@ -6,8 +6,7 @@ import Transactions from './Transactions';
 function App() {
   return (
     <>
-    <h2>Charter Rewards Program</h2>
-    <Transactions/>
+      <Transactions/>
     </>
   );
 }
