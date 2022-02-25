@@ -4,7 +4,7 @@ import { Table, Container } from 'react-bootstrap'
 // create 2 hashes:, a customer's monthly totals & customer's overall totals
 
 let customerMonthsHash = []
-let customerTotal = []
+let customerTotalHash = []
 transactions.forEach(transaction => {
   const month = new Date(transaction.Date).getMonth()+1 + "/" + new Date(transaction.Date).getFullYear()
   const over50Reward = transaction.Amount < 50 ? 0 : 
@@ -18,15 +18,15 @@ transactions.forEach(transaction => {
   } else {
     customerMonthsHash[customerAndMonth] += totalReward
   }
-  if (!customerTotal[transaction.Person]) {
-    customerTotal[transaction.Person] = totalReward
+  if (!customerTotalHash[transaction.Person]) {
+    customerTotalHash[transaction.Person] = totalReward
   } else {
-    customerTotal[transaction.Person] += totalReward
+    customerTotalHash[transaction.Person] += totalReward
   }
 
 })
 
-// turn hash to objects
+// turn monthly hash to objects
 var key
 var customerMonths = []
 for (key in customerMonthsHash) {
@@ -36,6 +36,14 @@ for (key in customerMonthsHash) {
         amount: customerMonthsHash[key]
     })
 }
+// turn customer total hash to objects
+var customerTotals = []
+for (key in customerTotalHash) {
+    customerTotals.push({
+        customer: key,
+        amount: customerTotalHash[key]
+    })
+}
 
 const CustomerMonthsComponent = customerMonths.map((customerMonth, index) => {
   return (
@@ -43,6 +51,15 @@ const CustomerMonthsComponent = customerMonths.map((customerMonth, index) => {
       <td>{customerMonth.customer}</td>
       <td>{customerMonth.month}</td>
       <td>{customerMonth.amount}</td>
+    </tr>
+  )
+})
+
+const CustomerTotalsComponent = customerTotals.map((customerTotal, index) => {
+  return (
+    <tr key={index}>
+      <td>{customerTotal.customer}</td>
+      <td>{customerTotal.amount}</td>
     </tr>
   )
 })
@@ -58,11 +75,23 @@ const MonthlySummary = () => {
           <tr>
             <th>Month</th>
             <th>Customer</th>
-            <th>Points</th>
+            <th>Monthly Points</th>
           </tr>
         </thead>
         <tbody>
           {CustomerMonthsComponent}
+        </tbody>
+      </Table>
+
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Total Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {CustomerTotalsComponent}
         </tbody>
       </Table>
     </Container>
