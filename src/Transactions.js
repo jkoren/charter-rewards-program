@@ -46,13 +46,21 @@ for (key in customerTotalHash) {
 }
 
 const customerMonthsSorted = customerMonths.sort((a, b) => {
-    if (a.month < b.month) {
+    if (a.month === b.month) {
+      if (a.customer < b.customer) {
         return -1
-    }
-    if (a.month > b.month) {
+      }
+      else if (a.customer > b.customer) {
         return 1
+      }
+      else if (a.customer === b.customer) {
+        return 0
+      }
+    } else {
+      if (a.month < b.month) return -1
+      else if (a.month > b.month) return 1
     }
-    return 0;
+    return 0
 })
 
 const CustomerMonthsComponent = customerMonthsSorted.map((customerMonth, index) => {
