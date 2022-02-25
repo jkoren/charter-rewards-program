@@ -1,61 +1,68 @@
 import { transactions } from "./MockAPIResponse";
 import { Table, Container } from 'react-bootstrap'
 
-const result = transactions.reduce((subTotals, transaction) => {
-  const month = new Date(transaction.Date).getMonth()+1
-  const year = new Date(transaction.Date).getFullYear()
-  const monthYear = month + "/" + year
-  if (subTotals[monthYear] == null) {
-    subTotals[monthYear] = []
+// create 2 hashes:, a customer's monthly totals & customer's overall totals
+
+let customerMonthsHash = []
+let customerTotal = []
+transactions.forEach(transaction => {
+  const month = new Date(transaction.Date).getMonth()+1 + "/" + new Date(transaction.Date).getFullYear()
+  const over50Reward = transaction.Amount < 50 ? 0 : 
+        (transaction.Amount >= 100 ? 50 : ( transaction.Amount - 50))
+  const over100Reward = transaction.Amount < 100 ? 0 : ( transaction.Amount - 100) * 2
+  const totalReward = over50Reward + over100Reward
+
+  const customerAndMonth = transaction.Person + "-" + month
+  if (!customerMonthsHash[customerAndMonth]) {
+    customerMonthsHash[customerAndMonth] = totalReward
+  } else {
+    customerMonthsHash[customerAndMonth] += totalReward
   }
-  if (subTotals[monthYear][transaction.Person] == null) {
-    subTotals[monthYear][transaction.Person] = 0
+  if (!customerTotal[transaction.Person]) {
+    customerTotal[transaction.Person] = totalReward
+  } else {
+    customerTotal[transaction.Person] += totalReward
   }
-  subTotals[monthYear][transaction.Person] += transaction.Amount
-  return subTotals
+
 })
 
-console.log(result)
-
-const Transactions = () => {
-  const TransactionsComponent = !transactions ? " " :
-    transactions.map((transaction, index) => {
-      const over50Reward = transaction.Amount < 50 ? 0 : 
-        (transaction.Amount >= 100 ? 50 : ( transaction.Amount - 50))
-      const over100Reward = transaction.Amount < 100 ? 0 : ( transaction.Amount - 100) * 2
-      const totalReward = over50Reward + over100Reward
-      return (
-        <tr key={index}>
-          <td>{transaction.Person}</td>
-          <td>{new Date(transaction.Date).getMonth()+1}</td>
-          <td>{transaction.Date}</td>
-          <td>{transaction.Amount}</td>
-          <td>{over50Reward === 0 ? "" : over50Reward.toFixed(0)}</td>
-          <td>{over100Reward === 0 ? "" : over100Reward.toFixed(0)}</td>
-          <td>{totalReward === 0 ? "" : totalReward.toFixed(0)}</td>
-        </tr>
-      )
+// turn hash to objects
+var key
+var customerMonths = []
+for (key in customerMonthsHash) {
+    customerMonths.push({
+        month: key.split("-")[0],
+        customer: key.split("-")[1],
+        amount: customerMonthsHash[key]
     })
+}
 
+const CustomerMonthsComponent = customerMonths.map((customerMonth, index) => {
+  return (
+    <tr key={index}>
+      <td>{customerMonth.customer}</td>
+      <td>{customerMonth.month}</td>
+      <td>{customerMonth.amount}</td>
+    </tr>
+  )
+})
+
+const MonthlySummary = () => {
   return ( 
     <>
-      <h3>Transactions </h3>
+      <h3>Monthly Summary </h3>
       <Container>
     
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Customer</th>
             <th>Month</th>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Over $50 Rewards</th>
-            <th>Over $100 Rewards</th>
-            <th>Total Rewards</th>
+            <th>Customer</th>
+            <th>Points</th>
           </tr>
         </thead>
         <tbody>
-          {TransactionsComponent}
+          {CustomerMonthsComponent}
         </tbody>
       </Table>
     </Container>
@@ -63,4 +70,4 @@ const Transactions = () => {
    );
 }
  
-export default Transactions;
+export default MonthlySummary;
