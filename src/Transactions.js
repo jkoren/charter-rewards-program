@@ -84,8 +84,8 @@ const CustomerTotalsComponent = customerTotals.map((customerTotal, index) => {
 
 const MonthlySummary = () => {
   return ( 
-      <Container>
-        <h2 className="d-flex justify-content-center mt-5">Charter Rewards Program</h2>
+      <Container className="bg-light">
+        <h2 className="bg-primary text-white d-flex justify-content-center mt-5">Charter Rewards Program</h2>
         <h3>Monthly Customer Summary </h3>
       
         <Table striped bordered hover>
