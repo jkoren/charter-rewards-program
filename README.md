@@ -3,6 +3,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 This project for Charter Communications takes a record of transactions by multiple customers during a three month period and calculates the reward points each customer earned.  A customer receives 2 points for every dollar spent over $100 in each transaction, plus 1 point for every dollar spent over $50 in each transaction. (for example a $120 purchase = 2x$20 + 1x$50 = 90 points).
 
+See the site live at https://charter-rewards-program.herokuapp.com/
+
 ## Details
 
 The data is a Mock API response of transactions.  The data can be seen in [this Google Sheet](https://docs.google.com/spreadsheets/d/1moYk0wufhbB9hc95f1eNREUouJDXmTMLkUYCpwJsuNU/edit?usp=sharing) with the calculations.
